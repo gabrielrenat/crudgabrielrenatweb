@@ -4,6 +4,8 @@
         <th>Titulo</th>
         <th>Autor</th>
         <th>Resenha</th>
+        <th>Editar</th>
+        <th>Apagar</th>
       </tr>
     </thead>
     <tbody>
@@ -12,6 +14,18 @@
         <td>{titulo}</td>
         <td>{autor}</td>
         <td>{resenha}</td>
+        <td>
+          <button type="button">Editar</button>
+        </td>
+        <td>
+          <button
+            type="button"
+            onclick="if(confirm('Deseja realmente apagar?'))
+              location.href='?class=Tabela&method=remover&id={id}'"
+          >
+            Remover
+          </button>
+        </td>
       </tr>
       {/linha}
     </tbody>
