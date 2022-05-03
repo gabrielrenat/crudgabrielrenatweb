@@ -9,6 +9,10 @@ class Form
   public function controller()
   {
     $form = new Template("view/form.html");
+    $form->set("id", "");
+    $form->set("titulo", "");
+    $form->set("autor", "");
+    $form->set("resenha", "");
     $this->message = $form->saida();
   }
   public function salvar()
@@ -20,7 +24,36 @@ class Form
         $titulo = $conexao->quote($_POST["titulo"]);
         $autor = $conexao->quote($_POST["autor"]);
         $resenha = $conexao->quote($_POST["resenha"]);
-        $resultado = $livro->insert("titulo, autor, resenha", "$titulo, $autor, $resenha");
+        if (empty($_POST["id"])) {
+          $livro->insert(
+            "titulo, autor, resenha",
+            "$titulo, $autor, $resenha"
+          );
+        } else {
+          $id = $conexao->quote($_POST["id"]);
+          $livro->update(
+            "titulo = $titulo, autor = $autor, resenha = $resenha",
+            "id = $id"
+          );
+        }
+      } catch (Exception $e) {
+        echo $e->getMessage();
+      }
+    }
+  }
+  public function editar()
+  {
+    if (isset($_GET["id"])) {
+      try {
+        $conexao = Transaction::get();
+        $id = $conexao->quote($_GET["id"]);
+        $livro = new Crud("livro");
+        $resultado = $livro->select("*", "id = $id");
+        $form = new Template("view/form.html");
+        foreach ($resultado[0] as $cod => $valor) {
+          $form->set($cod, $valor);
+        }
+        $this->message = $form->saida();
       } catch (Exception $e) {
         echo $e->getMessage();
       }
