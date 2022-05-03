@@ -2,6 +2,7 @@
 class Form
 {
   private $message = "";
+  private $error = "";
   public function __construct()
   {
     Transaction::open();
@@ -36,9 +37,15 @@ class Form
             "id = $id"
           );
         }
+        $this->message = $livro->getMessage();
+        $this->error = $livro->getError();
       } catch (Exception $e) {
-        echo $e->getMessage();
+        $this->message = $e->getMessage();
+        $this->error = true;
       }
+    } else {
+      $this->message = "Campos não informados!";
+      $this->error = true;
     }
   }
   public function editar()
@@ -49,19 +56,37 @@ class Form
         $id = $conexao->quote($_GET["id"]);
         $livro = new Crud("livro");
         $resultado = $livro->select("*", "id = $id");
-        $form = new Template("view/form.html");
-        foreach ($resultado[0] as $cod => $valor) {
-          $form->set($cod, $valor);
+        if (!$livro->getError()) {
+          $form = new Template("view/form.html");
+          foreach ($resultado[0] as $cod => $resenha) {
+            $form->set($cod, $resenha);
+          }
+          $this->message = $form->saida();
+        } else {
+          $this->message = $livro->getMessage();
+          $this->error = true;
         }
-        $this->message = $form->saida();
       } catch (Exception $e) {
-        echo $e->getMessage();
+        $this->message = $e->getMessage();
+        $this->error = true;
       }
     }
   }
   public function getMessage()
   {
-    return $this->message;
+    if (is_string($this->error)) {
+      return $this->message;
+    } else {
+      $msg = new Template("view/msg.html");
+      if ($this->error) {
+        $msg->set("cor", "danger");
+      } else {
+        $msg->set("cor", "success");
+      }
+      $msg->set("msg", $this->message);
+      $msg->set("uri", "?class=Tabela");
+      return $msg->saida();
+    }
   }
   public function __destruct()
   {
