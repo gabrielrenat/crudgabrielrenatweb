@@ -16,6 +16,7 @@
         <td>{resenha}</td>
         <td>
           <button 
+            class="edit"
             type="button"
             onclick="location.href='?class=Form&method=editar&id={id}'"
             >
@@ -25,6 +26,7 @@
         </td>
         <td>
           <button
+            class="remove"
             type="button"
             onclick="if(confirm('Deseja realmente apagar?'))
               location.href='?class=Tabela&method=remover&id={id}'"
