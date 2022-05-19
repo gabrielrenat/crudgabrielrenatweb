@@ -11,15 +11,15 @@ class Tabela
   {
     try {
       Transaction::get();
-      $livro = new Crud("livro");
-      $resultado = $livro->select();
+      $voo = new Crud("voo");
+      $resultado = $voo->select();
       $tabela = new Template("view/tabela.html");
       if (is_array($resultado)) {
         $tabela->set("linha", $resultado);
         $this->message = $tabela->saida();
       } else {
-        $this->message = $livro->getMessage();
-        $this->error = $livro->getError();
+        $this->message = $voo->getMessage();
+        $this->error = $voo->getError();
       }
     } catch (Exception $e) {
       $this->message = $e->getMessage();
@@ -32,10 +32,10 @@ class Tabela
       try {
         $conexao = Transaction::get();
         $id = $conexao->quote($_GET["id"]);
-        $livro = new Crud("livro");
-        $livro->delete("id = $id");
-        $this->message = $livro->getMessage();
-        $this->error = $livro->getError();
+        $voo = new Crud("voo");
+        $voo->delete("id = $id");
+        $this->message = $voo->getMessage();
+        $this->error = $voo->getError();
       } catch (Exception $e) {
         $this->message = $e->getMessage();
         $this->error = true;

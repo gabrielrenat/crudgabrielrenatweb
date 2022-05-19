@@ -11,34 +11,34 @@ class Form
   {
     $form = new Template("view/form.html");
     $form->set("id", "");
-    $form->set("titulo", "");
-    $form->set("autor", "");
-    $form->set("resenha", "");
+    $form->set("trajeto", "");
+    $form->set("aeronave", "");
+    $form->set("horario", "");
     $this->message = $form->saida();
   }
   public function salvar()
   {
-    if (isset($_POST["titulo"]) && isset($_POST["autor"]) && isset($_POST["resenha"])) {
+    if (isset($_POST["trajeto"]) && isset($_POST["aeronave"]) && isset($_POST["horario"])) {
       try {
         $conexao = Transaction::get();
-        $livro = new Crud("livro");
-        $titulo = $conexao->quote($_POST["titulo"]);
-        $autor = $conexao->quote($_POST["autor"]);
-        $resenha = $conexao->quote($_POST["resenha"]);
+        $voo = new Crud("voo");
+        $trajeto = $conexao->quote($_POST["trajeto"]);
+        $aeronave = $conexao->quote($_POST["aeronave"]);
+        $horario = $conexao->quote($_POST["horario"]);
         if (empty($_POST["id"])) {
-          $livro->insert(
-            "titulo, autor, resenha",
-            "$titulo, $autor, $resenha"
+          $voo->insert(
+            "trajeto, aeronave, horario",
+            "$trajeto, $aeronave, $horario"
           );
         } else {
           $id = $conexao->quote($_POST["id"]);
-          $livro->update(
-            "titulo = $titulo, autor = $autor, resenha = $resenha",
+          $voo->update(
+            "trajeto = $trajeto, aeronave = $aeronave, horario = $horario",
             "id = $id"
           );
         }
-        $this->message = $livro->getMessage();
-        $this->error = $livro->getError();
+        $this->message = $voo->getMessage();
+        $this->error = $voo->getError();
       } catch (Exception $e) {
         $this->message = $e->getMessage();
         $this->error = true;
@@ -54,16 +54,16 @@ class Form
       try {
         $conexao = Transaction::get();
         $id = $conexao->quote($_GET["id"]);
-        $livro = new Crud("livro");
-        $resultado = $livro->select("*", "id = $id");
-        if (!$livro->getError()) {
+        $voo = new Crud("voo");
+        $resultado = $voo->select("*", "id = $id");
+        if (!$voo->getError()) {
           $form = new Template("view/form.html");
-          foreach ($resultado[0] as $cod => $resenha) {
-            $form->set($cod, $resenha);
+          foreach ($resultado[0] as $cod => $horario) {
+            $form->set($cod, $horario);
           }
           $this->message = $form->saida();
         } else {
-          $this->message = $livro->getMessage();
+          $this->message = $voo->getMessage();
           $this->error = true;
         }
       } catch (Exception $e) {
