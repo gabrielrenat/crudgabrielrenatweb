@@ -1,0 +1,32 @@
+<form method="post" action="?class=Form&method=salvar">
+  <input type="hidden" name="id" value="{id}" />
+  <div>
+    <label for="trajeto">Trajeto:</label>
+    <input
+      type="text"
+      name="trajeto"
+      id="trajeto"
+      required
+      maxlength="50"
+      value="{trajeto}"
+    />
+  </div>
+  <div>
+    <label for="aeronave">Aeronave:</label>
+    <textarea name="aeronave" id="aeronave" required>{aeronave}</textarea>
+  </div>
+  <div>
+    <label for="horario">Horario:</label>
+    <input
+      type="text"
+      name="horario"
+      id="horario"
+      required
+      maxlength="50"
+      value="{horario}"
+    />
+  </div>
+  <div>
+    <button type="submit">Salvar</button>
+  </div>
+</form>
